@@ -99,14 +99,19 @@
                             '<div class="'+mwConfig.div_inner_classes.join(' ')+'">'+
                             icon+
                             child_element_html+
+			    additional_help_block+
                             '<div class="'+mwConfig.help_block_classes.join(' ')+'" ng-messages="form.'+name+'.$error" ng-if="form.'+name+'.$touched">'+
-                            additional_help_block+
                             '<div ng-messages-include="messages/tpl"></div>'+
                             '</div>'+
                             '</div>';
                         //overwrite element html
                         el.html(error_message_html);
-
+			
+			//remove unnecessary attributes
+			el.removeAttr("mw-error-message-add-help");
+			el.removeAttr("mw-error-message-icon");
+			el.removeAttr("mw-error-message-success");
+			
                         //compile element
                         $compile(el)(scope);
                     }
