@@ -1,5 +1,5 @@
 /**
- * @version 1.1.0
+ * @version 1.0.0
  * @license MIT
  * @Author MrWook
  */
@@ -9,10 +9,12 @@
 	ng.module('mw-error-message', []);
 
 	ng.module('mw-error-message').constant('mwConfig', {
+		icon: false,
+		icon_template: '<span class="fa wm_error_message_icon"></span>',
 		success:true,
-		label_classes: ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-12'],
+		label_classes: ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-12', 'control-label'],
 		div_inner_classes: ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-12'],
-		div_outer_classes: ['error_message_box'],
+		div_outer_classes: ['form-group', 'error_message_box'],
 		help_block_classes: ['help-block'],
 		additional_help_block: '',
 		messages: {
@@ -21,10 +23,8 @@
 			maxlength: 'ERROR_MSG_TOLONG',
 			minlength: 'ERROR_MSG_TOSHORT'
 		},
-		icon: false,
-		icon_template: '<span class="fa wm_error_message_icon"></span>',
 		translate: false,
-		tooltip: false
+		tooltip: true
 	});
 
 	//create ngMessage messages
@@ -38,7 +38,7 @@
 			messages += '<ng-message when="'+key+'">{{"'+value+'"'+translate+'}}</ng-message>'
 		});
 		$templateCache.put('messages/tpl', messages);
-		$templateCache.put('mwErrorMessageTooltip/tpl', '<ol class="wm_error_tooltip"> <li ng-repeat="(key, value) in tooltip_content">{{value}}</li> </ol>');
+
 		//check for ngMessages
 		try{
 			angular.module('ngMessages');
@@ -52,30 +52,36 @@
 			restrict: 'A',
 			priority:1001,
 			terminal:true,
-			scope: true,
+			scope:true,
 			compile: function compile(tElement, tAttrs){
 				return {
 					pre: function preLink(scope, el, attrs, ctrl){
 						//remove own directive to prevent cycle
 						el.removeAttr("mw-error-message");
-						//set options if set
-						var mwOptions = {};
-						if(attrs.mwErrorMessageOptions !== undefined){
-							mwOptions = scope.$parent[attrs.mwErrorMessageOptions];
-						}
+
+						//set icons
+						var icon = '';
+						if((mwConfig.icon == true && attrs.mwErrorMessageIcon == "true") || (mwConfig.icon == true && attrs.mwErrorMessageIcon == undefined) || (mwConfig.icon == false && attrs.mwErrorMessageIcon == "true"))
+							icon = mwConfig.icon_template;
 
 						//set child element
 						var child_element = angular.copy(el.children(":first"));
 
 						//set required asterisk
 						var required = '';
-						if(child_element.attr('required') !== undefined){
+						if(child_element.attr('required') != undefined){
 							required = '*';
 						}
-						if(child_element.attr('ng-required') !== undefined){
+						if(child_element.attr('ng-required') != undefined){
 							required = '<span ng-if="::'+child_element.attr('ng-required')+'">*</span>';
 						}
 
+						var additional_help_block = '';
+						if(attrs.mwErrorMessageAddHelp != undefined && attrs.mwErrorMessageAddHelp != ''){
+							additional_help_block = attrs.mwErrorMessageAddHelp;
+						}else{
+							additional_help_block = mwConfig.additional_help_block
+						}
 						//set name from name
 						var name = child_element.attr('name');
 						//set prefix for label
@@ -87,30 +93,19 @@
 						//add css class
 						el.addClass(mwConfig.div_outer_classes.join(' '));
 
-						var additional_help_block = '';
-						if(mwOptions.addHelp !== undefined && mwOptions.addHelp != ''){
-							additional_help_block = mwOptions.addHelp;
-						}else{
-							additional_help_block = mwConfig.additional_help_block
-						}
-						//set icons
-						var icon = '';
-						if(mwOptions.icon == true || (mwOptions.icon === undefined && mwConfig.icon == true))
-							icon = mwConfig.icon_template;
-
 						//add tooltip
-						if(mwOptions.tooltip == true || (mwOptions.tooltip === undefined && mwConfig.tooltip == true)){
+						if(mwConfig.tooltip == true){
+							//check for ui.bootstrap.tooltip
 							try{
-								//check for ui.bootstrap.tooltip
 								angular.module('ui.bootstrap.tooltip');
 								//set tooltip
-								el[0].setAttribute('uib-tooltip-template', "'mwErrorMessageTooltip/tpl'");
+								el[0].setAttribute('uib-tooltip-template', "'test/tpl'");
 								el[0].setAttribute('tooltip-placement', "auto left");
 
 								//set content of tooltip
 								scope.tooltip_content = {};
 								angular.forEach(mwConfig.messages, function(value, key) {
-									if(child_element.attr(key) !== undefined)
+									if(child_element.attr(key) != undefined)
 										scope.tooltip_content[key] = value;
 								});
 								if(child_element.attr('type') == 'email')
@@ -121,10 +116,9 @@
 						}
 
 						//set error message ng-class
-						if(mwOptions.success == true || (mwOptions.success === undefined && mwConfig.success == true))
+						el.attr('ng-class', "{ 'has-error': form."+name+".$touched && form."+name+".$invalid }");
+						if((mwConfig.success == true && attrs.mwErrorMessageSuccess == "true") || (mwConfig.success == true && attrs.mwErrorMessageSuccess == undefined) || (mwConfig.success == false && attrs.mwErrorMessageSuccess == "true"))
 							el.attr('ng-class', "{ 'has-error': form."+name+".$touched && form."+name+".$invalid, 'has-success': form."+name+".$touched && !form."+name+".$invalid}");
-						else
-							el.attr('ng-class', "{ 'has-error': form."+name+".$touched && form."+name+".$invalid }");
 
 						//set child element html
 						var child_element_html = el.html();
@@ -143,7 +137,10 @@
 						el.html(error_message_html);
 
 						//remove unnecessary attributes
-						el.removeAttr("mw-error-message-options");
+						el.removeAttr("mw-error-message-add-help");
+						el.removeAttr("mw-error-message-icon");
+						el.removeAttr("mw-error-message-success");
+
 						//compile element
 						$compile(el)(scope);
 					}
