@@ -3,7 +3,6 @@
   "version": "1.1.0",
   "description": "angular wrapper for input validation",
   "main": "./dist/error_message.js",
-  "private": true,
   "scripts": {
     "start": "node index.js"
   },
