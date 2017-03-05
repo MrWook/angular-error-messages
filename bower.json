@@ -1,0 +1,21 @@
+{
+  "name": "mw-error-messages",
+  "version": "1.1.0",
+  "description": "angular wrapper for input validation",
+  "main": "index.js",
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "angular": "^1.5.8",
+    "angular-messages": "^1.5.8"
+  },
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "public",
+    "tests"
+  ]
+}
