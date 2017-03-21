@@ -2,7 +2,7 @@
 
 mw-error-messages is an AngularJS module that wrap the ngMessage into a easy to use directive for error validation. It has several features like an icon in the input field or to show that a field is valid and invalid.
 
-##Requirements (tested in)
+## Requirements (tested in)
 - Angular (v1.5.8)
 - NgMessages (v1.5.8)
 - Bootstrap (v3.3.7) used as default grid system
@@ -25,7 +25,7 @@ npm install mw-error-messages --save
 bower install mw-error-messages
 ```
 
-##Usage
+## Usage
 
 Once the script is included in your html file, simply include the module in your app:
 ```javascript
@@ -47,7 +47,7 @@ In this example the marker would be 'CTRLSYSTEM_TEST'.
 If you use the required attribute, a '*' will be placed behind the label to mark this field as required. This also works with ng-required.
 
 
-##Config
+## Config
 
 Name                    | Type      | Description
 ----------------------- | --------- | ------------
@@ -94,12 +94,12 @@ mwConfig.messages['required'] = 'This field is required';
 mwConfig.messages['birthday'] = 'You need to be 18 years old.';
 ```
 
-##Demo
+## Demo
 
 <a href='https://plnkr.co/edit/ZF3fAjkD5MRiWMViNnId?p=preview' target='_blank'>View demo on Plunker</a>
 
 
-##Tasklist 
+## Tasklist 
 - [ ] add more examples
 - [ ] add documentation
 - [X] nodejs, bower support
