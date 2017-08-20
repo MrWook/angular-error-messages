@@ -1,6 +1,6 @@
 {
   "name": "mw-error-messages",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "angular wrapper for input validation",
   "main": "./dist/error_message.js",
   "scripts": {
@@ -8,5 +8,5 @@
   },
   "author": "MrWook",
   "license": "MIT",
-  "keywords": ["angular", "angular-message", "error", "mw", "validation"]
+  "keywords": ["mw-error-messages", "angular", "angular-message", "error", "mw", "validation"]
 }
