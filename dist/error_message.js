@@ -1,5 +1,5 @@
 /**
- * @version 1.1.0
+ * @version 1.2.0
  * @license MIT
  * @Author MrWook
  */
@@ -38,7 +38,7 @@
 			messages += '<ng-message when="'+key+'">{{"'+value+'"'+translate+'}}</ng-message>'
 		});
 		$templateCache.put('messages/tpl', messages);
-		$templateCache.put('mwErrorMessageTooltip/tpl', '<ol class="wm_error_tooltip"> <li ng-repeat="(key, value) in tooltip_content">{{value}}</li> </ol>');
+		$templateCache.put('mwErrorMessageTooltip/tpl', '<ol class="wm_error_tooltip"> <li ng-repeat="(key, value) in tooltip_content">{{value\'+translate+\'}}</li> </ol>');
 		//check for ngMessages
 		try{
 			angular.module('ngMessages');
@@ -120,11 +120,18 @@
 							}
 						}
 
+						//get form name
+						var el_form = angular.element(el);
+						while(el_form.prop('tagName') !== 'FORM'){
+							el_form = el_form.parent();
+						}
+						var form_name = el_form.attr('name');
+
 						//set error message ng-class
 						if(mwOptions.success == true || (mwOptions.success === undefined && mwConfig.success == true))
-							el.attr('ng-class', "{ 'has-error': form."+name+".$touched && form."+name+".$invalid, 'has-success': form."+name+".$touched && !form."+name+".$invalid}");
+							el.attr('ng-class', "{ 'has-error': "+form_name+"."+name+".$touched && "+form_name+"."+name+".$invalid, 'has-success': "+form_name+"."+name+".$touched && !"+form_name+"."+name+".$invalid}");
 						else
-							el.attr('ng-class', "{ 'has-error': form."+name+".$touched && form."+name+".$invalid }");
+							el.attr('ng-class', "{ 'has-error': "+form_name+"."+name+".$touched && "+form_name+"."+name+".$invalid }");
 
 						//set child element html
 						var child_element_html = el.html();
@@ -135,7 +142,7 @@
 							icon+
 							child_element_html+
 							additional_help_block+
-							'<div class="'+mwConfig.help_block_classes.join(' ')+'" ng-messages="form.'+name+'.$error" ng-if="form.'+name+'.$touched">'+
+							'<div class="'+mwConfig.help_block_classes.join(' ')+'" ng-messages="'+form_name+'.'+name+'.$error" ng-if="'+form_name+'.'+name+'.$touched">'+
 							'<div ng-messages-include="messages/tpl"></div>'+
 							'</div>'+
 							'</div>';
