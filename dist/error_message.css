@@ -1,5 +1,5 @@
 /**
-* @version 1.1.0
+* @version 1.2.0
 * @license MIT
 * @Author MrWook
 */
@@ -11,10 +11,10 @@
 	min-height :80px;
 	margin-bottom: 15px;
 }
-.error_message_box.has-success{
+.error_message_box.has-success, .error_message_box.has-success button.dropdown-toggle{
 	color:#3c763d;
 }
-.error_message_box.has-error{
+.error_message_box.has-error, .error_message_box.has-error button.dropdown-toggle{
 	color: #a94442
 }
 /*
