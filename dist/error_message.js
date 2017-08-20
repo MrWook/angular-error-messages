@@ -1,5 +1,5 @@
 /**
- * @version 1.2.0
+ * @version 1.2.2
  * @license MIT
  * @Author MrWook
  */
@@ -38,7 +38,7 @@
 			messages += '<ng-message when="'+key+'">{{"'+value+'"'+translate+'}}</ng-message>'
 		});
 		$templateCache.put('messages/tpl', messages);
-		$templateCache.put('mwErrorMessageTooltip/tpl', '<ol class="wm_error_tooltip"> <li ng-repeat="(key, value) in tooltip_content">{{value\'+translate+\'}}</li> </ol>');
+		$templateCache.put('mwErrorMessageTooltip/tpl', '<ol class="wm_error_tooltip"> <li ng-repeat="(key, value) in tooltip_content">{{value'+translate+'}}</li> </ol>');
 		//check for ngMessages
 		try{
 			angular.module('ngMessages');
