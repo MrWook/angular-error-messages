@@ -1,6 +1,6 @@
 {
   "name": "mw-error-messages",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "angular wrapper for input validation",
   "main": "./dist/error_message.js",
   "scripts": {
