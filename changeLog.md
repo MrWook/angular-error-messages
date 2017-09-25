@@ -1,3 +1,7 @@
+## version 1.2.3
+
+* add support for interpolation inside the name of a input field if the value of 'name="value"' can be parsed it will used the parsed value as a name
+
 ## version 1.2.0
 
 * get form name dynamically
