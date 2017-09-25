@@ -1,5 +1,5 @@
 /**
- * @version 1.2.2
+ * @version 1.2.3
  * @license MIT
  * @Author MrWook
  */
@@ -47,7 +47,7 @@
 		}
 	}]);
 
-	ng.module('mw-error-message').directive('mwErrorMessage', ['$compile', '$log', 'mwConfig', function($compile, $log, mwConfig){
+	ng.module('mw-error-message').directive('mwErrorMessage', ['$compile', '$log', '$parse', 'mwConfig', function($compile, $log, $parse, mwConfig){
 		return {
 			restrict: 'A',
 			priority:1001,
@@ -74,8 +74,18 @@
 							required = '<span ng-if="'+child_element.attr('ng-required')+'">*</span>';
 						}
 
+						//set child element html
+						var child_element_html = el.html();
+
 						//set name from name
 						var name = child_element.attr('name');
+						var name_parsed = $parse(name)(scope);
+						if(name_parsed !== undefined){
+							child_element_html = child_element_html.replace("name='"+name+"'", "name='"+name_parsed+"'");
+							child_element_html = child_element_html.replace('name="'+name+'"', 'name="'+name_parsed+'"');
+							name = name_parsed;
+							child_element.attr('name', name);
+						}
 						//set prefix for label
 						var label_name = attrs.mwErrorMessage;
 						var translate = '';
@@ -132,9 +142,6 @@
 							el.attr('ng-class', "{ 'has-error': "+form_name+"."+name+".$touched && "+form_name+"."+name+".$invalid, 'has-success': "+form_name+"."+name+".$touched && !"+form_name+"."+name+".$invalid}");
 						else
 							el.attr('ng-class', "{ 'has-error': "+form_name+"."+name+".$touched && "+form_name+"."+name+".$invalid }");
-
-						//set child element html
-						var child_element_html = el.html();
 
 						//set error message html
 						var error_message_html = '<label for="'+name+'" class="'+mwConfig.label_classes.join(' ')+'">{{ "'+label_name+'"'+translate+' }}'+required+'</label>' +
