@@ -1,5 +1,5 @@
 /**
- * @version 1.2.3
+ * @version 1.2.4
  * @license MIT
  * @Author MrWook
  */
@@ -58,7 +58,7 @@
 					pre: function preLink(scope, el, attrs, ctrl){
 						//set options if set
 						var mwOptions = {};
-						if(attrs.mwErrorMessageOptions !== undefined){
+						if(attrs.mwErrorMessageOptions !== undefined && scope.$parent[attrs.mwErrorMessageOptions] !== undefined){
 							mwOptions = scope.$parent[attrs.mwErrorMessageOptions];
 						}
 
@@ -79,20 +79,28 @@
 
 						//set name from name
 						var name = child_element.attr('name');
-						var name_parsed = $parse(name)(scope);
-						if(name_parsed !== undefined){
-							child_element_html = child_element_html.replace("name='"+name+"'", "name='"+name_parsed+"'");
-							child_element_html = child_element_html.replace('name="'+name+'"', 'name="'+name_parsed+'"');
-							name = name_parsed;
-							child_element.attr('name', name);
+						var interpolation = false;
+						if(name.indexOf('{{') === 0 && name.indexOf('}}') === name.length-2){
+							name = name.replace('{{', '').replace('}}', '');
+							interpolation = true;
+						}else{
+							name = "'"+name+"'";
 						}
+
 						//set prefix for label
 						var label_name = attrs.mwErrorMessage;
 						var translate = '';
+
 						//set uppercase name for label
 						if(mwConfig.translate == true){
-							label_name += name.toUpperCase();
+							if(interpolation){
+								label_name = '"'+label_name+'"+'+name;
+							}else{
+								label_name = '"'+label_name+name.toUpperCase()+'"';
+							}
 							translate = '|translate';
+						}else{
+							label_name = '"'+label_name+'"';
 						}
 						//add css class
 						el.addClass(mwConfig.div_outer_classes.join(' '));
@@ -139,17 +147,17 @@
 
 						//set error message ng-class
 						if(mwOptions.success == true || (mwOptions.success === undefined && mwConfig.success == true))
-							el.attr('ng-class', "{ 'has-error': "+form_name+"."+name+".$touched && "+form_name+"."+name+".$invalid, 'has-success': "+form_name+"."+name+".$touched && !"+form_name+"."+name+".$invalid}");
+							el.attr('ng-class', "{ 'has-error': "+form_name+"["+name+"].$touched && "+form_name+"["+name+"].$invalid, 'has-success': "+form_name+"["+name+"].$touched && !"+form_name+"["+name+"].$invalid}");
 						else
-							el.attr('ng-class', "{ 'has-error': "+form_name+"."+name+".$touched && "+form_name+"."+name+".$invalid }");
+							el.attr('ng-class', "{ 'has-error': "+form_name+"["+name+"].$touched && "+form_name+"["+name+"].$invalid }");
 
 						//set error message html
-						var error_message_html = '<label for="'+name+'" class="'+mwConfig.label_classes.join(' ')+'">{{ "'+label_name+'"'+translate+' }}'+required+'</label>' +
+						var error_message_html = '<label for="'+name+'" class="'+mwConfig.label_classes.join(' ')+'">{{ '+label_name+translate+' }}'+required+'</label>' +
 							'<div class="'+mwConfig.div_inner_classes.join(' ')+'">'+
 							icon+
 							child_element_html+
 							additional_help_block+
-							'<div class="'+mwConfig.help_block_classes.join(' ')+'" ng-messages="'+form_name+'.'+name+'.$error" ng-if="'+form_name+'.'+name+'.$touched">'+
+							'<div class="'+mwConfig.help_block_classes.join(' ')+'" ng-messages="'+form_name+'['+name+'].$error" ng-if="'+form_name+'['+name+'].$touched">'+
 							'<div ng-messages-include="messages/tpl"></div>'+
 							'</div>'+
 							'</div>';

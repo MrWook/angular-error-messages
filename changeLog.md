@@ -1,3 +1,7 @@
+## version 1.2.4
+
+* fixed interpolation inside the name, use 'name="{{value}}""' for a dynamic name
+
 ## version 1.2.3
 
 * add support for interpolation inside the name of a input field if the value of 'name="value"' can be parsed it will used the parsed value as a name
