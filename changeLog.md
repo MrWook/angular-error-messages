@@ -1,3 +1,7 @@
+## version 1.2.5
+
+* fixed interpolation when translate is deactivated inside mw-error-message, to use it now you need to do it like this 'mw-error-message="{{name}}"' for a dynamic label
+
 ## version 1.2.4
 
 * fixed interpolation inside the name, use 'name="{{value}}""' for a dynamic name

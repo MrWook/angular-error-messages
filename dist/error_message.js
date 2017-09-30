@@ -1,5 +1,5 @@
 /**
- * @version 1.2.4
+ * @version 1.2.5
  * @license MIT
  * @Author MrWook
  */
@@ -31,8 +31,8 @@
 	ng.module('mw-error-message').run(['$templateCache', '$log', 'mwConfig', function($templateCache, $log, mwConfig) {
 		var messages = '';
 		var translate = '';
-		if(mwConfig.translate == true)
-			translate = '|translate';
+		// if(mwConfig.translate == true)
+		// 	translate = '|translate';
 
 		angular.forEach(mwConfig.messages, function(value, key) {
 			messages += '<ng-message when="'+key+'">{{"'+value+'"'+translate+'}}</ng-message>'
@@ -79,28 +79,44 @@
 
 						//set name from name
 						var name = child_element.attr('name');
-						var interpolation = false;
+						var interpolation_name = false;
+						var name_temp = '';
 						if(name.indexOf('{{') === 0 && name.indexOf('}}') === name.length-2){
+							interpolation_name = true;
 							name = name.replace('{{', '').replace('}}', '');
-							interpolation = true;
+							name_temp = name;
 						}else{
+							name_temp = name;
 							name = "'"+name+"'";
 						}
-
 						//set prefix for label
 						var label_name = attrs.mwErrorMessage;
 						var translate = '';
+						var interpolation_label = false;
+						if(label_name.indexOf('{{') === 0 && label_name.indexOf('}}') === label_name.length-2){
+							interpolation_label = true;
+							label_name = label_name.replace('{{', '').replace('}}', '');
+						}
 
 						//set uppercase name for label
 						if(mwConfig.translate == true){
-							if(interpolation){
-								label_name = '"'+label_name+'"+'+name;
+							if(interpolation_label){
+								if(!interpolation_name)
+									name_temp = "'"+name_temp+"'";
+
+								label_name = label_name+'+'+name_temp;
+								console.log(label_name);
 							}else{
-								label_name = '"'+label_name+name.toUpperCase()+'"';
+								if(interpolation_name)
+									name_temp = "'+"+name_temp;
+								else
+									name_temp = name_temp+"'";
+								label_name = "'"+label_name+name_temp.toUpperCase();
 							}
-							translate = '|translate';
+							// translate = '|translate';
 						}else{
-							label_name = '"'+label_name+'"';
+							if(!interpolation_label)
+								label_name = "'"+label_name+"'";
 						}
 						//add css class
 						el.addClass(mwConfig.div_outer_classes.join(' '));
