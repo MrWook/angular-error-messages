@@ -1,5 +1,5 @@
 /**
- * @version 1.2.5
+ * @version 1.2.6
  * @license MIT
  * @Author MrWook
  */
@@ -31,8 +31,8 @@
 	ng.module('mw-error-message').run(['$templateCache', '$log', 'mwConfig', function($templateCache, $log, mwConfig) {
 		var messages = '';
 		var translate = '';
-		// if(mwConfig.translate == true)
-		// 	translate = '|translate';
+		if(mwConfig.translate == true)
+			translate = '|translate';
 
 		angular.forEach(mwConfig.messages, function(value, key) {
 			messages += '<ng-message when="'+key+'">{{"'+value+'"'+translate+'}}</ng-message>'
@@ -63,22 +63,20 @@
 						}
 
 						//set child element
-						var child_element = angular.copy(el.children(":first"));
+						var child_element = el.children(":first");
+						var child_element_copy = angular.copy(child_element);
 
 						//set required asterisk
 						var required = '';
-						if(child_element.attr('required') !== undefined){
+						if(child_element_copy.attr('required') !== undefined){
 							required = '*';
 						}
-						if(child_element.attr('ng-required') !== undefined){
-							required = '<span ng-if="'+child_element.attr('ng-required')+'">*</span>';
+						if(child_element_copy.attr('ng-required') !== undefined){
+							required = '<span ng-if="'+child_element_copy.attr('ng-required')+'">*</span>';
 						}
 
-						//set child element html
-						var child_element_html = el.html();
-
 						//set name from name
-						var name = child_element.attr('name');
+						var name = child_element_copy.attr('name');
 						var interpolation_name = false;
 						var name_temp = '';
 						if(name.indexOf('{{') === 0 && name.indexOf('}}') === name.length-2){
@@ -104,16 +102,16 @@
 								if(!interpolation_name)
 									name_temp = "'"+name_temp+"'";
 
-								label_name = label_name+'+'+name_temp;
-								console.log(label_name);
+								label_name = label_name+'+'+name_temp+'|uppercase';
 							}else{
 								if(interpolation_name)
-									name_temp = "'+"+name_temp;
-								else
-									name_temp = name_temp+"'";
-								label_name = "'"+label_name+name_temp.toUpperCase();
+									name_temp = "'+"+name_temp+'|uppercase';
+								else {
+									name_temp = name_temp.toUpperCase() + "'";
+								}
+								label_name = "'"+label_name+name_temp;
 							}
-							// translate = '|translate';
+							translate = '|translate';
 						}else{
 							if(!interpolation_label)
 								label_name = "'"+label_name+"'";
@@ -138,16 +136,16 @@
 								//check for ui.bootstrap.tooltip
 								angular.module('ui.bootstrap.tooltip');
 								//set tooltip
-								el[0].setAttribute('uib-tooltip-template', "'mwErrorMessageTooltip/tpl'");
-								el[0].setAttribute('tooltip-placement', "auto left");
+								child_element.attr('uib-tooltip-template', "'mwErrorMessageTooltip/tpl'");
+								child_element.attr('tooltip-placement', "auto left");
 
 								//set content of tooltip
 								scope.tooltip_content = {};
 								angular.forEach(mwConfig.messages, function(value, key) {
-									if(child_element.attr(key) !== undefined)
+									if(child_element_copy.attr(key) !== undefined)
 										scope.tooltip_content[key] = value;
 								});
-								if(child_element.attr('type') == 'email')
+								if(child_element_copy.attr('type') == 'email')
 									scope.tooltip_content['email'] = mwConfig.messages['email'];
 							}catch(error){
 								$log.error('ui-bootstrap-tooltip is missing');
@@ -166,6 +164,9 @@
 							el.attr('ng-class', "{ 'has-error': "+form_name+"["+name+"].$touched && "+form_name+"["+name+"].$invalid, 'has-success': "+form_name+"["+name+"].$touched && !"+form_name+"["+name+"].$invalid}");
 						else
 							el.attr('ng-class', "{ 'has-error': "+form_name+"["+name+"].$touched && "+form_name+"["+name+"].$invalid }");
+
+						//set child element html
+						var child_element_html = el.html();
 
 						//set error message html
 						var error_message_html = '<label for="'+name+'" class="'+mwConfig.label_classes.join(' ')+'">{{ '+label_name+translate+' }}'+required+'</label>' +

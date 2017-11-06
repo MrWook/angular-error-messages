@@ -3,11 +3,11 @@
 mw-error-messages is an AngularJS module that wrap the ngMessage into a easy to use directive for error validation. It has several features like an icon in the input field or to show that a field is valid and invalid.
 
 ## Requirements (tested in)
-- Angular (v1.5.8)
-- NgMessages (v1.5.8)
+- Angular (v1.6.6)
+- NgMessages (v1.6.6)
 - Bootstrap (v3.3.7) used as default grid system
 - (Optional) FontAwsome (4.3.0) or another font if you want to use icons
-- (Optional) ui-bootstrap (1.3.3) or another library with a tooltip directive
+- (Optional) ui-bootstrap (2.5.0)
 
 ## Install
 

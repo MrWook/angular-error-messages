@@ -1,3 +1,8 @@
+## version 1.2.6
+
+* fixed weird translation behavior
+* tooltip is now on the input field not on the wrapper.
+
 ## version 1.2.5
 
 * fixed interpolation when translate is deactivated inside mw-error-message, to use it now you need to do it like this 'mw-error-message="{{name}}"' for a dynamic label
@@ -19,6 +24,6 @@
 ## version 1.1.0
 
 * combine add-help, icon and other attriube options in one single attribute mw-error-message-options
-* add tooltip support (use ui-bootstrap-tooltip, can be changed to any other tooltip plugin)
+* add tooltip support
 * added own input css
 * grid system can be now exchanged with another one than bootstrap
