@@ -1,3 +1,4 @@
+# This repository is no longer maintained.
 # mw-error-messages
 
 mw-error-messages is an AngularJS module that wrap the ngMessage into a easy to use directive for error validation. It has several features like an icon in the input field or to show that a field is valid and invalid.
